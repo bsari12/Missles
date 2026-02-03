@@ -2,19 +2,16 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    public RectTransform joystickHandle; 
-    public float rotateSpeed = 300f;     
-    
-    private Vector2 moveInput;
+    public SimpleJoystick joystick; 
+    public float rotateSpeed = 400f;
 
     void Update()
     {
-        moveInput.x = Input.GetAxis("Horizontal");
-        moveInput.y = Input.GetAxis("Vertical");
+        Vector2 direction = joystick.InputVector;
 
-        if (moveInput.sqrMagnitude > 0.01f)
+        if (direction.sqrMagnitude > 0.01f)
         {
-            float targetAngle = Mathf.Atan2(-moveInput.x, moveInput.y) * Mathf.Rad2Deg;
+            float targetAngle = Mathf.Atan2(-direction.x, direction.y) * Mathf.Rad2Deg;
             Quaternion targetRotation = Quaternion.Euler(0, 0, targetAngle);
             
             transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotateSpeed * Time.deltaTime);
