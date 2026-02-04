@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class MissileSpawner : MonoBehaviour
 {
-    public GameObject missilePrefab;
+    public GameObject[] missilePrefabs;
     public Transform player;
     public float spawnInterval = 2.5f;
     
@@ -23,6 +23,8 @@ public class MissileSpawner : MonoBehaviour
 
     void SpawnMissile()
     {
+        if (missilePrefabs.Length == 0) return;
+
         float camHeight = Camera.main.orthographicSize;
         float camWidth = camHeight * Camera.main.aspect;
 
@@ -32,6 +34,7 @@ public class MissileSpawner : MonoBehaviour
         float randomSide = Random.Range(-horizontalSpread, horizontalSpread);
         Vector3 spawnPos = player.position + player.up * spawnDistance + player.right * randomSide;
 
-        Instantiate(missilePrefab, spawnPos, Quaternion.identity);
+        int randomIndex = Random.Range(0, missilePrefabs.Length);
+        Instantiate(missilePrefabs[randomIndex], spawnPos, Quaternion.identity);
     }
 }
