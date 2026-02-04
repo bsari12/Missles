@@ -6,9 +6,9 @@ public class PlayerController : MonoBehaviour
     public float rotateSpeed = 200f;
     public float moveSpeed = 8f;
     public int health = 3;
-
     public float score = 0f;
     public float timeScoreMultiplier = 10f;
+    public UIManager uiManager;
 
     void Update()
     {
@@ -35,12 +35,14 @@ public class PlayerController : MonoBehaviour
         health--;
         if (health <= 0)
         {
+            health = 0;
             Die();
         }
     }
 
     void Die()
     {
-        Destroy(gameObject);
+        uiManager.TriggerGameOver(score);
+        gameObject.SetActive(false);
     }
 }

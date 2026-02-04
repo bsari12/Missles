@@ -3,10 +3,23 @@ using UnityEngine;
 public class MissileSpawner : MonoBehaviour
 {
     public GameObject[] missilePrefabs;
-    public Transform player;
-    public float spawnInterval = 2.5f;
+    public PlayerController player;
     
+    public float maxInterval = 3.5f;
+    public float minInterval = 1.5f;
+    public float decreaseAmount = 0.25f;
+    public float scoreStep = 500f;
+
     private float timer;
+
+    void Start()
+    {
+        if (player == null)
+        {
+            player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+        }
+        timer = maxInterval;
+    }
 
     void Update()
     {
@@ -14,7 +27,14 @@ public class MissileSpawner : MonoBehaviour
 
         timer += Time.deltaTime;
 
-        if (timer >= spawnInterval)
+        float currentInterval = maxInterval - (Mathf.Floor(player.score / scoreStep) * decreaseAmount);
+        
+        if (currentInterval < minInterval)
+        {
+            currentInterval = minInterval;
+        }
+
+        if (timer >= currentInterval)
         {
             SpawnMissile();
             timer = 0;
@@ -32,7 +52,7 @@ public class MissileSpawner : MonoBehaviour
         float horizontalSpread = camWidth * 1.5f;
 
         float randomSide = Random.Range(-horizontalSpread, horizontalSpread);
-        Vector3 spawnPos = player.position + player.up * spawnDistance + player.right * randomSide;
+        Vector3 spawnPos = player.transform.position + player.transform.up * spawnDistance + player.transform.right * randomSide;
 
         int randomIndex = Random.Range(0, missilePrefabs.Length);
         Instantiate(missilePrefabs[randomIndex], spawnPos, Quaternion.identity);
