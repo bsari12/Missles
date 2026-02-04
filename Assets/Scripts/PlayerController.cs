@@ -6,13 +6,13 @@ public class PlayerController : MonoBehaviour
     public float rotateSpeed = 200f;
     public float moveSpeed = 8f;
     public int health = 3;
-    
-    public float score = 0;
-    public float nearMissDistance = 2.5f;
+
+    public float score = 0f;
+    public float timeScoreMultiplier = 10f;
 
     void Update()
     {
-        score += Time.deltaTime * 10f;
+        score += Time.deltaTime * timeScoreMultiplier;
 
         Vector2 direction = joystick.InputVector;
         if (direction.sqrMagnitude > 0.01f)
@@ -25,16 +25,18 @@ public class PlayerController : MonoBehaviour
         transform.Translate(Vector3.up * moveSpeed * Time.deltaTime);
     }
 
+    public void AddScore(float points)
+    {
+        score += points;
+    }
+
     public void TakeDamage()
     {
         health--;
-        if (health <= 0) Die();
-    }
-
-    public void AddNearMissScore()
-    {
-        score += 50f;
-        Debug.Log("Near Miss! Score: " + (int)score);
+        if (health <= 0)
+        {
+            Die();
+        }
     }
 
     void Die()

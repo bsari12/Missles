@@ -2,14 +2,25 @@ using UnityEngine;
 
 public class Missile : MonoBehaviour
 {
+    public GameObject explosionPrefab;
     public float speed = 10f;
     public float rotateSpeed = 200f;
+    public float nearMissDistance = 2.5f;
+    public float nearMissPoints = 100f;
+    public float destructionPoints = 250f;
+
     private Transform target;
-    private bool nearMissTriggered = false;
+    private PlayerController playerScript;
+    private bool hasNearMissed = false;
 
     void Start()
     {
-        target = GameObject.FindGameObjectWithTag("Player").transform;
+        GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
+        if (playerObj != null)
+        {
+            target = playerObj.transform;
+            playerScript = playerObj.GetComponent<PlayerController>();
+        }
     }
 
     void Update()
@@ -29,18 +40,13 @@ public class Missile : MonoBehaviour
 
     void CheckNearMiss()
     {
-        if (nearMissTriggered) return;
+        if (hasNearMissed || playerScript == null) return;
 
         float distance = Vector2.Distance(transform.position, target.position);
-        
-        if (distance < 2.5f)
+        if (distance <= nearMissDistance)
         {
-            PlayerController player = target.GetComponent<PlayerController>();
-            if (player != null)
-            {
-                player.AddNearMissScore();
-                nearMissTriggered = true;
-            }
+            playerScript.AddScore(nearMissPoints);
+            hasNearMissed = true;
         }
     }
 
@@ -48,13 +54,29 @@ public class Missile : MonoBehaviour
     {
         if (collision.CompareTag("Player"))
         {
-            collision.GetComponent<PlayerController>().TakeDamage();
-            Destroy(gameObject);
+            if (playerScript != null)
+            {
+                playerScript.TakeDamage();
+            }
+            Explode();
         }
         else if (collision.CompareTag("Missile"))
         {
-            Destroy(gameObject);
-            Destroy(collision.gameObject);
+            if (playerScript != null && gameObject.GetInstanceID() < collision.gameObject.GetInstanceID())
+            {
+                playerScript.AddScore(destructionPoints);
+            }
+            Explode();
         }
+    }
+
+    void Explode()
+    {
+        if (explosionPrefab != null)
+        {
+            GameObject fx = Instantiate(explosionPrefab, transform.position, Quaternion.identity);
+            Destroy(fx, 1.5f);
+        }
+        Destroy(gameObject);
     }
 }
