@@ -52,5 +52,11 @@ TagManager:
   - name: Player
     uniqueID: 2933547141
     locked: 0
+  - name: MenuBG
+    uniqueID: 2408053903
+    locked: 0
+  - name: MenuUI
+    uniqueID: 3396467035
+    locked: 0
   m_RenderingLayers:
   - Default
