@@ -5,12 +5,12 @@ public class EnvironmentManager : MonoBehaviour
     public GameObject cloudPrefab;
     public Transform player;
     
-    [Header("Sıklık ve Limit")]
+    [Header("Frequency and Limit")]
     public float spawnInterval = 0.1f;
     public int cloudsPerCycle = 2;
     public int maxClouds = 60;
     
-    [Header("Mesafe Ayarları")]
+    [Header("Distance Settings")]
     public float minRadius = 7f;
     public float maxRadius = 14f;
     public float overlapCheckRadius = 2f;
