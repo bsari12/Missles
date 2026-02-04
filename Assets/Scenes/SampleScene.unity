@@ -801,6 +801,9 @@ MonoBehaviour:
   joystick: {fileID: 650937999}
   rotateSpeed: 300
   moveSpeed: 3
+  health: 3
+  score: 0
+  nearMissDistance: 2.5
 --- !u!212 &1665664134
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -880,6 +883,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2077217972}
+  - component: {fileID: 2077217973}
   - component: {fileID: 2077217971}
   - component: {fileID: 2077217970}
   - component: {fileID: 2077217969}
@@ -973,6 +977,20 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &2077217973
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2077217968}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb358bd984b22e641b4369c608b26e78, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  indicatorPrefab: {fileID: 1233328989853652559, guid: 4ab8cda2132895e4d981170eed805c79, type: 3}
+  player: {fileID: 1665664135}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

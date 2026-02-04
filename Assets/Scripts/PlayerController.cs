@@ -2,13 +2,18 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    public SimpleJoystick joystick; 
-    public float rotateSpeed = 400f;
-
-    public float moveSpeed = 5f; 
+    public SimpleJoystick joystick;
+    public float rotateSpeed = 200f;
+    public float moveSpeed = 8f;
+    public int health = 3;
+    
+    public float score = 0;
+    public float nearMissDistance = 2.5f;
 
     void Update()
     {
+        score += Time.deltaTime * 10f;
+
         Vector2 direction = joystick.InputVector;
         if (direction.sqrMagnitude > 0.01f)
         {
@@ -18,5 +23,22 @@ public class PlayerController : MonoBehaviour
         }
 
         transform.Translate(Vector3.up * moveSpeed * Time.deltaTime);
+    }
+
+    public void TakeDamage()
+    {
+        health--;
+        if (health <= 0) Die();
+    }
+
+    public void AddNearMissScore()
+    {
+        score += 50f;
+        Debug.Log("Near Miss! Score: " + (int)score);
+    }
+
+    void Die()
+    {
+        Destroy(gameObject);
     }
 }
