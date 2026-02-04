@@ -16,6 +16,7 @@ public class PlayerController : MonoBehaviour
         if (!canMove) return;
 
         score += Time.deltaTime * timeScoreMultiplier;
+        uiManager.UpdateScoreUI(score);
 
         Vector2 direction = joystick.InputVector;
         if (direction.sqrMagnitude > 0.01f)
@@ -33,6 +34,13 @@ public class PlayerController : MonoBehaviour
     public void TakeDamage()
     {
         health--;
+        uiManager.UpdateHealthUI(health);
+        
+        if (AudioManager.instance != null)
+        {
+            AudioManager.instance.PlayExplosion();
+        }
+
         if (health <= 0)
         {
             health = 0;

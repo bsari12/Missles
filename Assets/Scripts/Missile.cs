@@ -77,6 +77,12 @@ public class Missile : MonoBehaviour
             GameObject fx = Instantiate(explosionPrefab, transform.position, Quaternion.identity);
             Destroy(fx, 1.5f);
         }
+
+        if (AudioManager.instance != null)
+        {
+            AudioManager.instance.PlayExplosion();
+        }
+
         Destroy(gameObject);
     }
 }

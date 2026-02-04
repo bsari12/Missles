@@ -5,11 +5,9 @@ public class AudioManager : MonoBehaviour
     public static AudioManager instance;
 
     public AudioSource musicSource;
-    public AudioSource engineSource;
     public AudioSource sfxSource;
 
     public AudioClip backgroundMusic;
-    public AudioClip engineSound;
     public AudioClip explosionSound;
 
     private bool isMuted = false;
@@ -20,6 +18,7 @@ public class AudioManager : MonoBehaviour
         {
             instance = this;
             DontDestroyOnLoad(gameObject);
+            LoadSoundSettings();
         }
         else
         {
@@ -29,13 +28,12 @@ public class AudioManager : MonoBehaviour
 
     void Start()
     {
-        musicSource.clip = backgroundMusic;
-        musicSource.loop = true;
-        musicSource.Play();
-
-        engineSource.clip = engineSound;
-        engineSource.loop = true;
-        engineSource.Play();
+        if (musicSource.clip == null)
+        {
+            musicSource.clip = backgroundMusic;
+            musicSource.loop = true;
+            musicSource.Play();
+        }
     }
 
     public void PlayExplosion()
@@ -46,7 +44,20 @@ public class AudioManager : MonoBehaviour
     public void ToggleSound()
     {
         isMuted = !isMuted;
-        AudioListener.volume = isMuted ? 0 : 1;
+        ApplySoundSettings();
+    }
+
+    private void ApplySoundSettings()
+    {
+        AudioListener.volume = isMuted ? 0f : 1f;
+        PlayerPrefs.SetInt("Muted", isMuted ? 1 : 0);
+        PlayerPrefs.Save();
+    }
+
+    private void LoadSoundSettings()
+    {
+        isMuted = PlayerPrefs.GetInt("Muted", 0) == 1;
+        AudioListener.volume = isMuted ? 0f : 1f;
     }
 
     public bool IsMuted()

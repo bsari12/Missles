@@ -1,72 +1,80 @@
 using UnityEngine;
-using UnityEngine.UI;
 using TMPro;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class UIManager : MonoBehaviour
 {
-    public PlayerController player;
-    
-    [Header("Score UI")]
     public TextMeshProUGUI scoreText;
-
-    [Header("Health UI")]
-    public Image heartDisplay;
-    public Sprite[] heartSprites;
-
-    [Header("Panels")]
-    public GameObject pausePanel;
+    public TextMeshProUGUI gameOverScoreText;
+    public TextMeshProUGUI highScoreText;
     public GameObject gameOverPanel;
-    public TextMeshProUGUI finalScoreValueText;
+    public GameObject pausePanel;
+    public Image healthImage;
+    public Sprite[] healthSprites;
+    public SceneFader sceneFader;
 
-    private bool isGameOver = false;
-
-    void Update()
+    public void UpdateScoreUI(float score)
     {
-        if (player != null && !isGameOver)
+        if (scoreText != null)
         {
-            scoreText.text = Mathf.FloorToInt(player.score).ToString();
-            UpdateHeartUI(player.health);
+            scoreText.text = Mathf.FloorToInt(score).ToString();
         }
     }
 
-    public void UpdateHeartUI(int currentHealth)
+    public void UpdateHealthUI(int currentHealth)
     {
-        int index = 3 - currentHealth;
-        index = Mathf.Clamp(index, 0, 3);
-        heartDisplay.sprite = heartSprites[index];
-    }
-
-    public void OpenSettings()
-    {
-        Time.timeScale = 0f;
-        pausePanel.SetActive(true);
-    }
-
-    public void ResumeGame()
-    {
-        Time.timeScale = 1f;
-        pausePanel.SetActive(false);
+        if (currentHealth >= 0 && currentHealth < healthSprites.Length)
+        {
+            healthImage.sprite = healthSprites[currentHealth];
+        }
     }
 
     public void TriggerGameOver(float finalScore)
     {
-        isGameOver = true;
-        UpdateHeartUI(0);
+        int scoreToSave = Mathf.FloorToInt(finalScore);
+        gameOverScoreText.text = scoreToSave.ToString();
+        CheckHighScore(scoreToSave);
         gameOverPanel.SetActive(true);
-        finalScoreValueText.text = Mathf.FloorToInt(finalScore).ToString();
+        gameOverPanel.transform.SetAsLastSibling();
+    }
+
+    private void CheckHighScore(int currentScore)
+    {
+        int savedHighScore = PlayerPrefs.GetInt("HighScore", 0);
+        if (currentScore > savedHighScore)
+        {
+            savedHighScore = currentScore;
+            PlayerPrefs.SetInt("HighScore", savedHighScore);
+            PlayerPrefs.Save();
+        }
+        highScoreText.text = "High Score\n\n" + savedHighScore.ToString();
+    }
+
+    public void PauseGame()
+    {
+        pausePanel.SetActive(true);
+        pausePanel.transform.SetAsLastSibling();
         Time.timeScale = 0f;
+    }
+
+    public void ResumeGame()
+    {
+        pausePanel.SetActive(false);
+        Time.timeScale = 1f;
     }
 
     public void RestartGame()
     {
         Time.timeScale = 1f;
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        if (sceneFader != null) sceneFader.FadeTo(SceneManager.GetActiveScene().name);
+        else SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
-    public void GoToMainMenu()
+    public void GoToMainMenu(string menuSceneName)
     {
         Time.timeScale = 1f;
-        SceneManager.LoadScene("MainMenu");
+        if (sceneFader != null) sceneFader.FadeTo(menuSceneName);
+        else SceneManager.LoadScene(menuSceneName);
     }
 }
