@@ -2,22 +2,12 @@ using UnityEngine;
 
 public class CameraFollow : MonoBehaviour
 {
-    public Transform target; 
-    private Vector3 offset;  
-
-    void Start()
-    {
-        if (target != null)
-        {
-            offset = transform.position - target.position;
-        }
-    }
+    public Transform player;
 
     void LateUpdate()
     {
-        if (target != null)
-        {
-            transform.position = target.position + offset;
-        }
+        if (player == null) return;
+
+        transform.position = new Vector3(player.position.x, player.position.y - 1.4f, -10f);
     }
 }

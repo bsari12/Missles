@@ -1,13 +1,13 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
-public class MainMenuManager : MonoBehaviour
+public class MainMenu : MonoBehaviour
 {
+    public SceneFader sceneFader;
     public string gameSceneName = "GameScene";
 
     public void PlayGame()
     {
-        SceneManager.LoadScene(gameSceneName);
+        sceneFader.FadeTo(gameSceneName);
     }
 
     public void QuitGame()

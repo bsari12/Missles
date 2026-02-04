@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    public bool canMove = false;
     public SimpleJoystick joystick;
     public float rotateSpeed = 200f;
     public float moveSpeed = 8f;
@@ -12,6 +13,8 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        if (!canMove) return;
+
         score += Time.deltaTime * timeScoreMultiplier;
 
         Vector2 direction = joystick.InputVector;
@@ -25,10 +28,7 @@ public class PlayerController : MonoBehaviour
         transform.Translate(Vector3.up * moveSpeed * Time.deltaTime);
     }
 
-    public void AddScore(float points)
-    {
-        score += points;
-    }
+    public void AddScore(float points) => score += points;
 
     public void TakeDamage()
     {
